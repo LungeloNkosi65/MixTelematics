@@ -1,4 +1,5 @@
 ﻿using MixTelematics.Models;
+using System.Diagnostics;
 
 namespace MixTelematics.Services
 {
@@ -23,7 +24,6 @@ namespace MixTelematics.Services
 
             int axis = depth % 2;
             int mid = Quickselect(positions, start, end, axis, (start + end) / 2);
-
             var node = new QuadTreeNode
             {
                 Vehicle = positions[mid],
@@ -71,7 +71,7 @@ namespace MixTelematics.Services
             positions[i] = positions[j];
             positions[j] = temp;
         }
-        public VehiclePosition FindNearest(float latitude, float longitude)
+        public VehiclePosition FindNearest(Co_Ordinates co_Ordinates)
         {
             if (_root == null)
                 return null;
@@ -79,7 +79,7 @@ namespace MixTelematics.Services
             float bestDistance = float.MaxValue;
             VehiclePosition nearest = null;
 
-            FindNearestVehicle(_root, latitude, longitude, 0, ref bestDistance, ref nearest);
+            FindNearestVehicle(_root, co_Ordinates.Latitude, co_Ordinates.Longitude, 0, ref bestDistance, ref nearest);
 
             return nearest;
         }
