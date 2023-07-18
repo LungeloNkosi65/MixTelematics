@@ -14,6 +14,5 @@ namespace MixTelematics.Models
         public float Longitude { get; set; }
         public ulong RecordedTimeUTC { get; set; }
 
-        public const int SizeInBytes= 2000001;
     }
 }

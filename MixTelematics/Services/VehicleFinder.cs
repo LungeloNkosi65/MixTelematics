@@ -1,16 +1,25 @@
-﻿namespace MixTelematics.Services
+﻿using System.Diagnostics;
+
+namespace MixTelematics.Services
 {
     public class VehicleFinder
     {
         public static void FindVehicle()
         {
-            string fileName = @"VehiclePositions.dat";
-            var vehiclePositions = BinaryFIleREader.ReadBinaryDataFile(fileName);
-            var quadTree = new NearestVehicleFinder(vehiclePositions);
-            //quadTree.Build(vehiclePositions);
-
-            var targetCoordinates = new[]
+            try
             {
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                string fileName = @"VehiclePositions.dat";
+                var vehiclePositions = BinaryFIleREader.ReadBinaryDataFile(fileName);
+
+
+
+                var quadTree = new NearestVehicleFinder(vehiclePositions);
+                //quadTree.Build(vehiclePositions);
+
+                var targetCoordinates = new[]
+                {
             new { Latitude = 34.544909f, Longitude = -102.100843f },
             new { Latitude = 32.345544f, Longitude = -99.123124f },
             new { Latitude = 33.234235f, Longitude = -100.214124f },
@@ -23,25 +32,34 @@
             new { Latitude = 32.234235f, Longitude = -100.222222f }
         };
 
-            foreach (var targetCoordinate in targetCoordinates)
-            {
-                var nearestVehicle = quadTree.FindNearest(targetCoordinate.Latitude, targetCoordinate.Longitude);
+                foreach (var targetCoordinate in targetCoordinates)
+                {
+                    var nearestVehicle = quadTree.FindNearest(targetCoordinate.Latitude, targetCoordinate.Longitude);
 
-                Console.WriteLine($"Position #{Array.IndexOf(targetCoordinates, targetCoordinate) + 1}:");
-                Console.WriteLine($"Latitude: {targetCoordinate.Latitude}");
-                Console.WriteLine($"Longitude: {targetCoordinate.Longitude}");
-                if (nearestVehicle != null)
-                {
-                    Console.WriteLine($"Closest Vehicle ID: {nearestVehicle.VehicleId}");
-                    Console.WriteLine($"Registration: {nearestVehicle.VehicleRegistration}");
-                    //Console.WriteLine($"Distance: {NearestVehicleFinder.CalculateDistance(targetCoordinate.Latitude, targetCoordinate.Longitude, nearestVehicle.Latitude, nearestVehicle.Longitude)}");
+                    Console.WriteLine($"Position #{Array.IndexOf(targetCoordinates, targetCoordinate) + 1}:");
+                    Console.WriteLine($"Latitude: {targetCoordinate.Latitude}");
+                    Console.WriteLine($"Longitude: {targetCoordinate.Longitude}");
+                    if (nearestVehicle != null)
+                    {
+                        Console.WriteLine($"Closest Vehicle ID: {nearestVehicle.VehicleId}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No closest vehicle found.");
+                    }
+
+                    Console.WriteLine();
                 }
-                else
-                {
-                    Console.WriteLine("No closest vehicle found.");
-                }
-                Console.WriteLine();
+                stopwatch.Stop();
+                Console.WriteLine($"Execution time: {stopwatch.ElapsedMilliseconds}ms");
             }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine($"An Error Occured: {ex.Message}");
+            }
+
         }
+
     }
 }
