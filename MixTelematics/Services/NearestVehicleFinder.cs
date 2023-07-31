@@ -1,5 +1,4 @@
 ﻿using MixTelematics.Models;
-using System.Diagnostics;
 
 namespace MixTelematics.Services
 {
